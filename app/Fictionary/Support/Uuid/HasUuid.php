@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Fictionary\Support\Uuid;
+
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Schema;
+
+trait HasUuid
+{
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function bootHasUuid()
+    {
+        static::creating(function($model) {
+            /** @var string **/
+            $field = $model->getUuidField();
+
+            // Check if the column exists in the database
+            if (! Schema::hasColumn($model->getTable(), $field)) {
+                throw new \Exception('Column not found');
+            }
+
+            $model->forceFill([
+                $model->getUuidField() => Uuid::create($model, $field),
+            ]);
+        });
+    }
+
+    /**
+     * Get the uuid field name
+     *
+     * @return
+     */
+    protected function getUuidField() : string
+    {
+        return $this->uuid ?? 'uuid';
+    }
+}
