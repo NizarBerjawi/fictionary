@@ -71,6 +71,6 @@ class Role extends Model
      */
     public function users() : BelongsToMany
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(config('auth.providers.users.model', User::class));
     }
 }

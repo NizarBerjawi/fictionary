@@ -36,6 +36,6 @@ trait HasUuid
      */
     protected function getUuidField() : string
     {
-        return $this->uuid ?? 'uuid';
+        return property_exists($this, 'uuid') ? $this->uuid : 'uuid';
     }
 }

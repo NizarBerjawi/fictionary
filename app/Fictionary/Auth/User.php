@@ -3,12 +3,16 @@
 namespace App\Fictionary\Auth;
 
 use App\Fictionary\Auth\Role;
+use App\Fictionary\Auth\Activation;
 use App\Fictionary\Support\Uuid\HasUuid;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use \Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class User extends Authenticatable
 {
@@ -71,15 +75,25 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the user's notifications.
+     * The user that belong to the user.
      *
-     * @return MorphMany
+     * @return HasOne
      */
-    public function notifications()
+    public function activation() : HasOne
     {
-        return $this->morphMany(DatabaseNotification::class, 'notifiable', 'notifiable_type', 'notifiable_uuid')
-                    ->orderBy('created_at', 'desc');
+        return $this->hasOne(Activation::class, 'user_uuid');
     }
+
+    // /**
+    //  * Get the user's notifications.
+    //  *
+    //  * @return MorphMany
+    //  */
+    // public function notifications() : MorphMany
+    // {
+    //     return $this->morphMany(DatabaseNotification::class, 'notifiable', 'notifiable_type', 'notifiable_uuid')
+    //                 ->orderBy('created_at', 'desc');
+    // }
 
     /**
      * Check if the user has a role. Returns true if
@@ -88,7 +102,7 @@ class User extends Authenticatable
      * @param string $role
      * @return boolean
      */
-    public function hasRole(string $role)
+    public function hasRole(string $role) : bool
     {
         return $this->roles()->where('name', $role)->exists();
     }
@@ -100,7 +114,7 @@ class User extends Authenticatable
      * @param array $roles
      * @return boolean
      */
-     public function hasRoles(array $roles)
+     public function hasRoles(array $roles) : bool
      {
          $query = $this->roles();
 
@@ -110,4 +124,83 @@ class User extends Authenticatable
 
          return $query->exists();
      }
+
+     /**
+      * Checks if the user has an activation
+      *
+      * @return boolean
+      */
+     public function hasActivation() : bool
+     {
+         return $this->activation()->exists();
+     }
+
+     /**
+      * Checks if the user is activated
+      *
+      * @return boolean
+      */
+     public function isActivated() : bool
+     {
+         return $this->hasActivation() && $this->activation->isVerified();
+     }
+
+     /**
+      * Checks if the user is pending activation
+      *
+      * @return boolean
+      */
+     public function isPendingActivation() : bool
+     {
+         return $this->hasActivation() && $this->activation->awaitingVerification();
+     }
+
+     /**
+      * Activates a new user account
+      *
+      * @return boolean
+      */
+     public function activate() : bool
+     {
+         if ($this->isPendingActivation()) {
+             return $this->activation()->update(['is_verified' => true]);
+         }
+
+         return false;
+     }
+
+     /**
+      * Create an activation token for the user
+      *
+      *
+      * @return Activation
+      */
+     public function createActivation() : Activation
+     {
+         // Check if the user has an email account
+         if (empty($this->email)) {
+             throw new Exception('User does not have an email.');
+         }
+
+         // Check if the user is already activated
+         if ($this->isActivated()) {
+             throw new Exception('User is already activated.');
+         }
+
+         // Create a new activation
+         $activation = new Activation();
+         $activation->user()->associate($this);
+         $activation->save();
+
+         return $activation;
+     }
+
+     /**
+      *
+      */
+     public function scopeByEmail(Builder $query, string $email)
+     {
+        return $query->where('email', $email);
+     }
+
 }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRoleUserTable extends Migration
+class CreateActivationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateRoleUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('role_user', function (Blueprint $table) {
-            $table->uuid('role_uuid');
-            $table->uuid('user_uuid');
+        Schema::create('activations', function (Blueprint $table) {
+            $table->uuid('user_uuid')->index();
+            $table->string('token')->unique();
+            $table->boolean('is_verified')->default(false);
+            $table->timestamps();
 
-            $table->index(['role_uuid', 'user_uuid']);
-            $table->foreign('role_uuid')->references('uuid')->on('roles');
             $table->foreign('user_uuid')->references('uuid')->on('users');
         });
     }
@@ -30,6 +30,6 @@ class CreateRoleUserTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('role_user');
+        Schema::dropIfExists('activations');
     }
 }
