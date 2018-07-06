@@ -23,6 +23,6 @@ class DashboardController extends Controller
      */
     public function index(Request $request)
     {
-        return 'here';
+        return view('admin.index');
     }
 }

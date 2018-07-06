@@ -27,6 +27,14 @@ class RegisterController extends Controller
 
     use RegistersUsers;
 
+
+    /**
+     * Where to redirect users after login.
+     *
+     * @var string
+     */
+    protected $redirectTo = '/login';
+
     /**
      * Create a new controller instance.
      *
@@ -96,12 +104,14 @@ class RegisterController extends Controller
         try {
             $activation = $user->createActivation();
         } catch (Exception $e) {
-            return back()->withWarning('This is embarrassing! Something went wrong...
-                                        Please contact an administrator.');
+            return redirect($this->redirectPath())
+                    ->withWarning('This is embarrassing! Something went wrong...
+                                   Please contact an administrator.');
         }
 
         $user->notify(new RegistrationSuccess($activation));
 
-        return back()->withSuccess('An activation email was sent to ' . $user->email);
+        return redirect($this->redirectPath())
+                    ->withSuccess('An activation email was sent to ' . $user->email);
     }
 }

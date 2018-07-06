@@ -12,8 +12,7 @@
 
 @section('layout')
     <div id="app">
-
-        @include('admin.partials.navbar')
+        @include('partials.navbar')
 
         <main class="py-4">
             @yield('content')

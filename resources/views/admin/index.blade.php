@@ -1,25 +1,55 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Dashboard</div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success">
-                            {{ session('status') }}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <a href="#" class="text-info">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="fa fa-3x fa-users"></i>
+                            <h5 class="card-title">Users</h5>
                         </div>
-                    @endif
+                    </div>
+                </a>
+            </div>
 
-                    You are logged in!
-                </div>
+            <div class="col-md-6">
+                <a href="#" class="text-info">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="fa fa-3x fa-book-open"></i>
+                            <h5 class="card-title">Books</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-md-4">
+            <div class="col-md-6">
+                <a href="#" class="text-info">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="fa fa-3x fa-users"></i>
+                            <h5 class="card-title">Users</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-6">
+                <a href="#" class="text-info">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="fa fa-3x fa-book-open"></i>
+                            <h5 class="card-title">Books</h5>
+                        </div>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
-</div>
 @endsection
 
 @section('scripts')
