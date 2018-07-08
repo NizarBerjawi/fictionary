@@ -5,6 +5,7 @@ namespace App\Fictionary\Auth;
 use App\Fictionary\Auth\Role;
 use App\Fictionary\Auth\Activation;
 use App\Fictionary\Support\Uuid\HasUuid;
+use App\Fictionary\Support\Filters\Filterable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasUuid;
+    use Notifiable, Filterable, HasUuid;
 
     /**
      * The table associated with the model.
@@ -84,17 +85,6 @@ class User extends Authenticatable
         return $this->hasOne(Activation::class, 'user_uuid');
     }
 
-    // /**
-    //  * Get the user's notifications.
-    //  *
-    //  * @return MorphMany
-    //  */
-    // public function notifications() : MorphMany
-    // {
-    //     return $this->morphMany(DatabaseNotification::class, 'notifiable', 'notifiable_type', 'notifiable_uuid')
-    //                 ->orderBy('created_at', 'desc');
-    // }
-
     /**
      * Check if the user has a role. Returns true if
      * the role is applicable, and false otherwise.
@@ -123,6 +113,16 @@ class User extends Authenticatable
          }
 
          return $query->exists();
+     }
+
+     /**
+      * Check if the user is an admin
+      *
+      * @return boolean
+      */
+     public function isAdmin() : bool
+     {
+         return $this->hasRole('admin');
      }
 
      /**
@@ -196,11 +196,14 @@ class User extends Authenticatable
      }
 
      /**
+      * Get user by email
       *
+      * @param Builder $query
+      * @param string $email
+      * @return Builder
       */
-     public function scopeByEmail(Builder $query, string $email)
+     public function scopeByEmail(Builder $query, string $email) : Builder
      {
         return $query->where('email', $email);
      }
-
 }

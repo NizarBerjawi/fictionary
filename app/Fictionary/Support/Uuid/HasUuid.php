@@ -20,7 +20,7 @@ trait HasUuid
 
             // Check if the column exists in the database
             if (! Schema::hasColumn($model->getTable(), $field)) {
-                throw new \Exception('Column not found');
+                throw new \Exception('Uuid column not found');
             }
 
             $model->forceFill([

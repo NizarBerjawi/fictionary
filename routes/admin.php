@@ -12,3 +12,4 @@
 */
 
 Route::get('dashboard', 'DashboardController@index')->name('dashboard');
+Route::get('users', 'UserController@index')->name('admin.users');
