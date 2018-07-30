@@ -31,8 +31,8 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-
         $users = User::query()
+                     ->exclude($request->user())
                      ->filter($this->filters)
                      ->paginate(10);
 

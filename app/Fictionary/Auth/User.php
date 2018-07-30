@@ -2,6 +2,7 @@
 
 namespace App\Fictionary\Auth;
 
+use Exception;
 use App\Fictionary\Auth\Role;
 use App\Fictionary\Auth\Activation;
 use App\Fictionary\Support\Uuid\HasUuid;
@@ -63,6 +64,15 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password', 'remember_token',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'last_login' => 'datetime',
     ];
 
     /**
@@ -206,4 +216,42 @@ class User extends Authenticatable
      {
         return $query->where('email', $email);
      }
+
+     /**
+      * Get a user with their activation
+      *
+      * @param Builder
+      * @return Builder
+      */
+     public function scopeWithActivation(Builder $query) : Builder
+     {
+         return $query->with('activation');
+     }
+
+     /**
+      * Exclude a User or multiple Users from the query
+      *
+      * @param Builder $query
+      * @param array $users
+      * @return Builder
+      */
+      public function scopeExclude(Builder $query, $users) : Builder
+      {
+          if (!is_array($users)) {
+              // Check that a User object is passed
+              if ($users instanceof static) {
+                  return $query->where('uuid', '!=', $users->uuid);
+              }
+          }
+
+          $exclude = $data->map(function($item) {
+              if ($item instanceof static) {
+                  return $item->uuid;
+              }
+
+              throw new Exception('Invalid user(s) provided');
+          });
+
+          return $query->whereNotIn('uuid', $exclude);
+      }
 }

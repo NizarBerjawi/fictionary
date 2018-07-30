@@ -39,7 +39,16 @@ class Activation extends Model
      * @var array
      */
     protected $hidden = [
-        'token', 'is_verified',
+        'token',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'is_verified' => 'boolean',
     ];
 
     /**
