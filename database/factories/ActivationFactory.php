@@ -1,7 +1,7 @@
 <?php
 
 use Faker\Generator as Faker;
-use App\Fictionary\Auth\User;
+use App\Fictionary\Auth\Activation;
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -13,13 +13,9 @@ use App\Fictionary\Auth\User;
 |
 */
 
-$factory->define(User::class, function (Faker $faker) {
+$factory->define(Activation::class, function (Faker $faker) {
     return [
-        'first_name' => $faker->firstName,
-        'last_name' => $faker->lastName,
-        'email' => $faker->unique()->safeEmail,
-        'password' => bcrypt('secret'), // secret
-        'last_login' => $faker->dateTimeThisMonth($max = 'now'),
-        'remember_token' => str_random(10),
+        'token' => Activation::generateToken(),
+        'is_verified' => $faker->boolean($chanceOfGettingTrue = 75),
     ];
 });

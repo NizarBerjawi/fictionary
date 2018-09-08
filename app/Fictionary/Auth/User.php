@@ -11,6 +11,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -18,7 +19,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
-    use Notifiable, Filterable, HasUuid;
+    use SoftDeletes,
+        Notifiable,
+        Filterable,
+        HasUuid;
 
     /**
      * The table associated with the model.
@@ -54,11 +58,12 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'first_name', 'last_name', 'email', 'password',
     ];
 
     /**
      * The attributes that should be hidden for arrays.
+     * class="col-md-6">
      *
      * @var array
      */
@@ -73,6 +78,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'last_login' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     /**

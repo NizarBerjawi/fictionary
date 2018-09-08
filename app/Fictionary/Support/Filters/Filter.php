@@ -83,7 +83,7 @@ abstract class Filter
      * @param Builder $builder
      * @return Builder
      */
-    public function apply(Builder $builder)
+    public function apply(Builder $builder) : Builder
     {
         $this->setBuilder($builder);
 

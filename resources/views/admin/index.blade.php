@@ -2,27 +2,29 @@
 
 @section('content')
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <a href="{{ route('admin.users') }}" class="text-info">
-                    <div class="card">
-                        <div class="card-body text-center">
-                            <i class="fa fa-3x fa-users"></i>
-                            <h5 class="card-title">Users</h5>
-                        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fa fa-users"></i>Manage user accounts</h5>
+                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
                     </div>
-                </a>
+                    <div class="card-footer text-right">
+                        <a href="{{ route('admin.users') }}" class="btn btn-primary">Go</a>
+                    </div>
+                </div>
             </div>
 
-            <div class="col-md-6">
-                <a href="#" class="text-info">
-                    <div class="card">
-                        <div class="card-body text-center">
-                            <i class="fa fa-3x fa-book-open"></i>
-                            <h5 class="card-title">Books</h5>
-                        </div>
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fa fa-users"></i>Manage user accounts</h5>
+                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
                     </div>
-                </a>
+                    <div class="card-footer text-right">
+                        <a href="{{ route('admin.users') }}" class="btn btn-primary">Go</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

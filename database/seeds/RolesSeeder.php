@@ -19,11 +19,10 @@ class RolesSeeder extends Seeder
             'description' => 'User who has access to all application components.',
         ]);
 
-        $admin = User::create([
-            'name' => 'Nizar El Berjawi',
-            'email' => 'nizarberjawi12@gmail.com',
-            'password' => bcrypt('secret'),
+        $userRole = Role::create([
+            'name' => 'user',
+            'display_name' => 'User',
+            'description' => 'A standard user of the application',
         ]);
-        $admin->roles()->attach($adminRole);
     }
 }

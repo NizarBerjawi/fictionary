@@ -32,6 +32,8 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $users = User::query()
+                     ->withTrashed()
+                     ->with(['activation'])
                      ->exclude($request->user())
                      ->filter($this->filters)
                      ->paginate(10);

@@ -25,7 +25,15 @@ class AccountController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('guest')->only('activate');
+    }
+
+    /**
+     * Show the user's account settings
+     */
+    public function index(Request $request)
+    {
+        return response()->view('account.index');
     }
 
     /**

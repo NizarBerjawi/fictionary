@@ -1,13 +1,6 @@
 @extends('layouts.base')
 
 @section('styles')
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-
-    <link href="{{ webpack('vendor', 'css') }}" rel="stylesheet">
-    <link href="{{ webpack('main', 'css') }}" rel="stylesheet">
-
     <style>
     html, body {
         background-color: #fff;
