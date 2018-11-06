@@ -34,7 +34,7 @@ class UserController extends Controller
         $users = User::query()
                      ->withTrashed()
                      ->with(['activation'])
-                     ->exclude($request->user())
+                     ->exclude([$request->user()])
                      ->filter($this->filters)
                      ->paginate(10);
 

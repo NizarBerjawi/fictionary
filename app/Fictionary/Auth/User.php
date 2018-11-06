@@ -241,22 +241,16 @@ class User extends Authenticatable
       * @param array $users
       * @return Builder
       */
-      public function scopeExclude(Builder $query, $users) : Builder
+      public function scopeExclude(Builder $query, array $users) : Builder
       {
-          if (!is_array($users)) {
-              // Check that a User object is passed
-              if ($users instanceof static) {
-                  return $query->where('uuid', '!=', $users->uuid);
-              }
-          }
+          $exclude = array_map(
+              function($item) {
+                  if ($item instanceof static) {
+                      return $item->uuid;
+                  }
 
-          $exclude = $data->map(function($item) {
-              if ($item instanceof static) {
-                  return $item->uuid;
-              }
-
-              throw new Exception('Invalid user(s) provided');
-          });
+                  return $item;
+              }, array_filter($users));
 
           return $query->whereNotIn('uuid', $exclude);
       }
