@@ -2,9 +2,14 @@
 
 @section('content')
     <div class="container">
+        @include('partials.messages')
+
         <div class="row">
-            <h1>Admin Homepage</h1>
+            <div class="col">
+                <h1>Admin Homepage</h1>
+            </div>
         </div>
+
     </div>
 @endsection
 

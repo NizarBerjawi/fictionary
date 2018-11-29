@@ -27,6 +27,21 @@ if (! function_exists('webpack')) {
 }
 
 /**
+ * Generate a class for an HTML element
+ *
+ * @param array $default The default classes of the element
+ * @param array $classes The classes to be appended to the element
+ * @return string
+ */
+if (! function_exists('className')) {
+    function className(array $default, array $classes = [])
+    {
+        $classes = array_merge($default, array_filter($classes));
+        return implode(' ', $classes);
+    }
+}
+
+/**
  * Recursively filter out null values in an array
  *
  * @param array $input

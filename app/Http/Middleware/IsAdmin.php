@@ -19,6 +19,6 @@ class IsAdmin
             return $next($request);
         }
 
-        return back();
+        return back()->withWarning('This action is not authorized.');
     }
 }

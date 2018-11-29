@@ -3,16 +3,20 @@
 @section('styles')
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-
-    {{--  Styles --}}
-    <link href="{{ webpack('vendor', 'css') }}" rel="stylesheet">
-    <link href="{{ webpack('main', 'css') }}" rel="stylesheet">
 @endsection
 
 @section('layout')
     <div id="app">
 
         @include('partials.navbar')
+
+        @auth
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                @include('app.partials.nav')
+            </div>
+        </div>
+        @endauth
 
         <main class="py-4">
             @yield('content')

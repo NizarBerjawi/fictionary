@@ -1,0 +1,40 @@
+// Fonts
+@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
+@import url("https://fonts.googleapis.com/css?family=Raleway:100,600");
+
+// Variables
+@import "variables";
+
+@import '~bootstrap/scss/bootstrap'; // Bootstrap
+@import '~pikaday/scss/pikaday'; // Pikaday
+@import '~bootstrap-select/sass/bootstrap-select'; // Bootstrap select
+@import '~bootstrap-sweetalert/dist/sweetalert'; // Bootstrap sweet alert
+@import '~filepond/dist/filepond'; // FilePond file uploader
+@import '~filepond-plugin-image-preview/dist/filepond-plugin-image-preview';
+
+/*
+ * FilePond Custom Styles
+ */
+
+.filepond--drop-label {
+	color: #4c4e53;
+}
+
+.filepond--label-action {
+	text-decoration-color: #babdc0;
+}
+
+.filepond--panel-root {
+	background-color: #edf0f4;
+}
+
+.filepond--root {
+	width:170px;
+	margin: 0 auto;
+}
+
+
+.navbar-laravel {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}

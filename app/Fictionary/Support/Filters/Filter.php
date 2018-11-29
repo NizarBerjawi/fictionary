@@ -61,7 +61,9 @@ abstract class Filter
      */
     protected function getFilters() : Collection
     {
-        $filters = $this->request->only($this->getFilterMethods()->all());
+        $possibleFilters = array_filter_recursive($this->request->all());
+
+        $filters = array_only($possibleFilters, $this->getFilterMethods()->all());
 
         return collect($filters)->filter();
     }

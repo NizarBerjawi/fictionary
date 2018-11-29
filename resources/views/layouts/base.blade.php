@@ -10,7 +10,7 @@
 
     <title>{{ config('app.name', 'Fictionary') }}</title>
 
-    <link href="{{ webpack('vendor', 'css') }}" rel="stylesheet">
+    <link href="{{ webpack('styles', 'css') }}" rel="stylesheet">
 
     @yield('styles')
 </head>

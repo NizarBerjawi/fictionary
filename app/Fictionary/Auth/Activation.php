@@ -57,6 +57,8 @@ class Activation extends Model
      * @return void
      */
     protected static function boot() {
+        parent::boot();
+        
         static::creating(function($model) {
             $model->forceFill([
                 'token' => static::generateToken(),

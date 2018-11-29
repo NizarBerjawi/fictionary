@@ -5,6 +5,8 @@ namespace App\Fictionary\Auth;
 use Exception;
 use App\Fictionary\Auth\Role;
 use App\Fictionary\Auth\Activation;
+use App\Fictionary\Profiles\Profile;
+use App\Fictionary\Profiles\Username;
 use App\Fictionary\Support\Uuid\HasUuid;
 use App\Fictionary\Support\Filters\Filterable;
 use Illuminate\Notifications\Notifiable;
@@ -53,6 +55,13 @@ class User extends Authenticatable
     public $incrementing = false;
 
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    public $with = ['profile'];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -81,6 +90,20 @@ class User extends Authenticatable
         'deleted_at' => 'datetime',
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleted(function($model) {
+            // Delete profiles
+            $model->profile()->delete();
+        });
+
+        static::restored(function($model) {
+            $model->profile()->restore();
+        });
+    }
+
     /**
      * The roles that belong to the user.
      *
@@ -99,6 +122,36 @@ class User extends Authenticatable
     public function activation() : HasOne
     {
         return $this->hasOne(Activation::class, 'user_uuid');
+    }
+
+    /**
+     * The profile of thi user.
+     *
+     * @return HasOne
+     */
+    public function profile() : HasOne
+    {
+        return $this->hasOne(Profile::class, 'user_uuid');
+    }
+
+    /**
+     * Check if the user has created a profile.
+     *
+     * @return boolean
+     */
+    public function hasProfile() : bool
+    {
+        return $this->profile()->exists();
+    }
+
+    /**
+     * Check if the user does not have a profile.
+     *
+     * @return boolean
+     */
+    public function doesntHaveProfile() : bool
+    {
+        return !$this->hasProfile();
     }
 
     /**
@@ -235,6 +288,54 @@ class User extends Authenticatable
      }
 
      /**
+      * Get users that have an activation
+      *
+      * @param Builder
+      * @return Builder
+      */
+     public function scopeHasActivation(Builder $query) : Builder
+     {
+         return $query->has('activation');
+     }
+
+     /**
+      * Get users that have been activated
+      *
+      * @param Builder
+      * @return Builder
+      */
+     public function scopeIsActive(Builder $query) : Builder
+     {
+         return $query->whereHas('activation', function(Builder $query) {
+            return $query->where('is_verified', true) ;
+        })->notTrashed();
+     }
+
+     /**
+      * Get users that have not been activated
+      *
+      * @param Builder
+      * @return Builder
+      */
+     public function scopeIsNotActive(Builder $query) : Builder
+     {
+         return $query->whereHas('activation', function(Builder $query) {
+            return $query->where('is_verified', false) ;
+        })->notTrashed();
+     }
+
+     /**
+      * Get users that have a profile
+      *
+      * @param Builder
+      * @return Builder
+      */
+     public function scopeHasProfile(Builder $query) : Builder
+     {
+         return $query->has('profile');
+     }
+
+     /**
       * Exclude a User or multiple Users from the query
       *
       * @param Builder $query
@@ -253,5 +354,40 @@ class User extends Authenticatable
               }, array_filter($users));
 
           return $query->whereNotIn('uuid', $exclude);
+      }
+
+      /**
+       * Get users that have not been soft deleted.
+       *
+       * @param Builder $query
+       * @return Builder`
+       */
+      public function scopeNotTrashed(Builder $query) : Builder
+      {
+          return $query->where('deleted_at', null);
+      }
+
+      /**
+       * Get the username of the user
+       *
+       * @return string
+       */
+      public function getUsernameAttribute()
+      {
+          if ($this->hasProfile()) {
+              return $this->profile->username;
+          }
+
+          return Username::generate($this);
+      }
+
+      /**
+       * Get the full name of a user
+       *
+       * @return string
+       */
+      public function getFullNameAttribute()
+      {
+          return "{$this->first_name} {$this->last_name}";
       }
 }

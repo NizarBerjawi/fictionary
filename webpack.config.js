@@ -8,9 +8,9 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 module.exports = {
   // Here the application starts executing and webpack starts bundling
   entry: {
-    main: './resources/assets/main',
-    admin: './resources/assets/admin',
-    vendor: './resources/assets/vendor',
+    main: './resources/assets/js/main',
+    vendor: './resources/assets/js/vendor',
+    styles: './resources/assets/styles/styles'
   },
 
   // Options related to how webpack emits results
@@ -42,7 +42,7 @@ module.exports = {
       {
         // Allows transpiling JavaScript files using Babel and webpack.
         test: /\.(js|jsx)$/,
-        include: path.resolve('./resources/jsx'),
+        // include: path.resolve('./resources/assets'),
         // Exclude these folders from testing
         exclude: /(node_modules|bower_components)/,
         use: {

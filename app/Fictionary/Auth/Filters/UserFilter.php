@@ -14,7 +14,7 @@ class UserFilter extends Filter
      */
     protected function name(string $name) : Builder
     {
-        return $this->builder->where('name', 'like', '%'.$name.'%');
+        return $this->builder->where('first_name', 'like', '%'.$name.'%');
     }
 
     /**
@@ -34,7 +34,29 @@ class UserFilter extends Filter
      */
     protected function username(string $username) : Builder
     {
-        return $this->builder->where('username', '%'.$username.'%');
+        return $this->builder->whereHas('profile', function($query) use ($username) {
+            $query->where('username', 'like', '%'.$username.'%');
+        });
+    }
+
+    /**
+     * Filter by status
+     *
+     * @param string $string
+     * @return Builder
+     */
+    public function status(string $status) : Builder
+    {
+        switch($status) {
+            case 'active':
+                return $this->active();
+            case 'inactive':
+                return $this->inactive();
+            case 'deleted':
+                return $this->deleted();
+            default:
+                return $this->builder->withTrashed();
+        }
     }
 
     /**
@@ -44,9 +66,7 @@ class UserFilter extends Filter
      */
     protected function active() : Builder
     {
-        return $this->builder->whereHas('activation', function(Builder $query) {
-            return $query->where('is_verified', true);
-        });
+        return $this->builder->isActive();
     }
 
     /**
@@ -56,9 +76,7 @@ class UserFilter extends Filter
      */
     protected function inactive() : Builder
     {
-        return $this->builder->whereHas('activation', function(Builder $query) {
-            return $query->where('is_verified', false);
-        });
+        return $this->builder->isNotActive();
     }
 
     /**
